@@ -1,17 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, FlatList, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import GoalItem from './src/components/GoalItem';
 
 export default function App() {
 
   const [enteredGoalText, setEnteredGoalText] = useState('');
+  const [courseGoals, setCourseGoals] = useState([]);
 
   const goalInputHandler = (enteredText) => {
     setEnteredGoalText(enteredText)
   }
 
   const addGoalHandler = () => {
-    console.log('new goal', enteredGoalText);
+    // console.log('new goal', enteredGoalText);
+    setCourseGoals((currentCourseGoals) => [
+      ...courseGoals,
+       {text: enteredGoalText, id: Math.random().toString()}])
+    
   }
 
 
@@ -22,11 +28,21 @@ export default function App() {
         <Button title='Add Goal' onPress={addGoalHandler}/>
       </View>
       <View style={styles.goalListContainer}>
-        <Text>List of goals...</Text>
+      <FlatList 
+      data={courseGoals} 
+      renderItem={(itemData) => {
+        return <GoalItem text={itemData.item.text}/>
+      }} 
+      keyExtractor={(item, index) => {
+        return item.id;
+      }}
+      alwaysBounceHorizontal={false}>
+          
+          </FlatList>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   appContainer: {
@@ -55,5 +71,6 @@ const styles = StyleSheet.create({
     width: '70%',
     marginRight: 8,
     padding: 8
-  }
+  },
+ 
 });
